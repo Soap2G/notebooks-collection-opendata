@@ -64,7 +64,7 @@ jobs:
           fi
           echo "notebooks13-cpp=$NOTEBOOKS13_cpp" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS13_uproot=$(find ./13-TeV-examples/uproot_python -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS13_uproot=$(find ./13-TeV-examples/uproot_python -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS13_uproot" ]; then
             echo "No notebooks found"
             NOTEBOOKS13_uproot="[]"
@@ -354,8 +354,6 @@ jobs:
             "result_run-notebooks-research.txt"
           )
 
-          ls $GITHUB_WORKSPACE
-
           for file in "${JOB_FILES[@]}"
           do
             if [ -f "$GITHUB_WORKSPACE/$file" ]; then
@@ -372,6 +370,8 @@ jobs:
               done < "$GITHUB_WORKSPACE/$file"
             fi
           done
+
+          cat status.md
 
       - name: Commit and push to GitLab
         env:
