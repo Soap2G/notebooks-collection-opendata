@@ -334,6 +334,7 @@ jobs:
   generate-status-report:
     runs-on: ubuntu-latest
     needs: [run-notebooks-8-cpp,run-notebooks-8-python,run-notebooks-13-cpp,run-notebooks-13-python,run-notebooks-13-uproot,run-notebooks-13-rdataframe,run-notebooks-research]
+    if: always()
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
