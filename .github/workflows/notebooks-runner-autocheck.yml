@@ -328,3 +328,67 @@ jobs:
         run: |
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
+
+
+
+  generate-status-report:
+    runs-on: ubuntu-latest
+    needs: [run-notebooks-8-cpp,run-notebooks-8-python,run-notebooks-13-cpp,run-notebooks-13-python,run-notebooks-13-uproot,run-notebooks-13-rdataframe,run-notebooks-research]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Generate status report
+        run: |
+          echo "# Notebook Run Status" > status.md
+          echo "" >> status.md
+
+          JOB_FILES=(
+            "result_run-notebooks-8-cpp.txt"
+            "result_run-notebooks-8-python.txt"
+            "result_run-notebooks-13-cpp.txt"
+            "result_run-notebooks-13-python.txt"
+            "result_run-notebooks-13-uproot.txt"
+            "result_run-notebooks-13-rdataframe.txt"
+            "result_run-notebooks-research.txt"
+          )
+
+          ls $GITHUB_WORKSPACE
+
+          for file in "${JOB_FILES[@]}"
+          do
+            if [ -f "$GITHUB_WORKSPACE/$file" ]; then
+              while IFS= read -r line
+              do
+                NOTEBOOK=$(echo $line | cut -d: -f1)
+                STATUS=$(echo $line | cut -d: -f2 | xargs)
+                if [ "$STATUS" == "success" ]; then
+                  STATUS="✅"
+                else
+                  STATUS="❌"
+                fi
+                echo "- $NOTEBOOK: $STATUS" >> status.md
+              done < "$GITHUB_WORKSPACE/$file"
+            fi
+          done
+
+      - name: Commit and push to GitLab
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: |
+          git config --global user.name "${{ vars.GITLAB_USER }}"
+          git config --global user.email "${{ vars.GITLAB_USER }}@cern.ch"
+          
+          git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.cern.ch/atlas-outreach-data-tools/atlas-open-data-website-v2.git
+          cd atlas-open-data-website-v2/docs
+          ls -l
+          
+          mkdir -p docs
+          mv ../../status.md status.md
+
+          ls -l
+
+          git checkout -b update_status
+          # git add status.md
+          # git commit -m "Update status.md"
+          # git push
