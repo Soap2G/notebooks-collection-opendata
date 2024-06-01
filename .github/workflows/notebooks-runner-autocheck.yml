@@ -199,9 +199,9 @@ jobs:
       - name: Output result
         if: always()
         run: |
-          mkdir -p $GITHUB_WORKSPACE/artifacts
-          echo "${{ matrix.notebook }}: ${{ job.status }}" >> $GITHUB_WORKSPACE/artifacts/result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
-          cat $GITHUB_WORKSPACE/artifacts/result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
+          mkdir -p ./artifacts
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> ./artifacts/result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
+          cat ./artifacts/result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
           echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
 
       - name: Upload results
@@ -209,7 +209,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: result_run-notebooks-13-cpp-${{ env.sanitized_name }}
-          path: $GITHUB_WORKSPACE/artifacts
+          path: ./artifacts
 
   run-notebooks-13-python:
     needs: find-notebooks
