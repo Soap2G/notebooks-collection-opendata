@@ -195,18 +195,19 @@ jobs:
         run: |
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
-        continue-on-error: true  # Ensure the job continues to output the result even if it fails
 
       - name: Output result
+        if: always()
         run: |
-          echo "${{ matrix.notebook }}: ${{ job.status }}" >> $GITHUB_WORKSPACE/result_run-notebooks-13-cpp.txt
-          cat $GITHUB_WORKSPACE/result_run-notebooks-13-cpp.txt
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> ${{ github.workspace }}/result_run-notebooks-13-cpp.txt
+          cat ${{ github.workspace }}/result_run-notebooks-13-cpp.txt
 
       - name: Upload results
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: result_run-notebooks-13-cpp
-          path: $GITHUB_WORKSPACE/result_run-notebooks-13-cpp.txt
+          path: ${{ github.workspace }}/result_run-notebooks-13-cpp.txt
 
   run-notebooks-13-python:
     needs: find-notebooks
