@@ -380,7 +380,7 @@ jobs:
           echo "| Status | Link |" > status.md
           echo "|----------|----------|" >> status.md
           pwd
-          for file in ./artifacts/*
+          for file in $(pwd)/artifacts/*
             do
               cat $file
               if [ -f "$file" ]; then
