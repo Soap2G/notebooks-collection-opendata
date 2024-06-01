@@ -377,23 +377,27 @@ jobs:
             "result_run-notebooks-research.txt"
           )
 
+          echo "| Status | Link |" > status.md
+          echo "|----------|----------|" >> status.md
+          
           for file in ./artifacts/*
-          do
-            if [ -f "$file" ]; then
-              while IFS= read -r line
-              do
-                NOTEBOOK=$(echo "$line" | cut -d: -f1)
-                STATUS=$(echo "$line" | cut -d: -f2 | xargs)
-                if [ "$STATUS" == "success" ]; then
-                  STATUS="✅"
-                else
-                  STATUS="❌"
-                fi
-                echo "- $NOTEBOOK: $STATUS" >> status.md
-              done < "$GITHUB_WORKSPACE/artifacts/$file"
-            fi
-          done
-
+            do
+              if [ -f "$file" ]; then
+                while IFS= read -r line
+                do
+                  NOTEBOOK=$(echo "$line" | cut -d: -f1)
+                  STATUS=$(echo "$line" | cut -d: -f2 | xargs)
+                  if [[ "$STATUS" == "success" ]]; then
+                    OUT="✅"
+                  else
+                    OUT="❌"
+                  fi
+                  prefix="https://github.com/atlas-outreach-data-tools/notebooks-collection-opendata/tree/master/"
+                  URL=$(echo "${NOTEBOOK/\.\//"$prefix"}")
+                  echo "| $OUT | [$(basename $NOTEBOOK)]($URL) |" >> status.md
+                done < $file
+              fi
+            done
           cat status.md
 
       - name: Commit and push to GitLab
