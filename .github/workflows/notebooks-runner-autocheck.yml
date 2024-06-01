@@ -201,12 +201,13 @@ jobs:
         run: |
           echo "${{ matrix.notebook }}: ${{ job.status }}" >> result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
           cat result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
+          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
 
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }})
+          name: result_run-notebooks-13-cpp-${{ env.sanitized_name }}
           path: ./
 
   run-notebooks-13-python:
