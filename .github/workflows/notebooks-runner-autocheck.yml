@@ -406,8 +406,8 @@ jobs:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
           GITLAB_USER: ${{ vars.GITLAB_USER }}
         run: |
-          git config --global user.name "${GITLAB_USER}"
-          git config --global user.email "${GITLAB_USER}@cern.ch"
+          git config --global user.name "atlasout"
+          git config --global user.email "atlasout@cern.ch"
           
           git clone https://oauth2:${GITLAB_TOKEN}@gitlab.cern.ch/atlas-outreach-data-tools/atlas-open-data-website-v2.git
           cd atlas-open-data-website-v2/docs
