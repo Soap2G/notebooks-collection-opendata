@@ -43,14 +43,14 @@ jobs:
             NOTEBOOKS="[]"
           fi
           
-          NOTEBOOKS8_cpp=$(find ./8-TeV-examples/cpp -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS8_cpp=$(find ./8-TeV-examples/cpp -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS8_cpp" ]; then
             echo "No notebooks found"
             NOTEBOOKS8_cpp="[]"
           fi
           echo "notebooks8-cpp=$NOTEBOOKS8_cpp" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS8_python=$(find ./8-TeV-examples/python -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS8_python=$(find ./8-TeV-examples/python -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS8_python" ]; then
             echo "No notebooks found"
             NOTEBOOKS8_python="[]"
@@ -129,6 +129,21 @@ jobs:
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
 
+      - name: Output result
+        if: always()
+        run: |
+          mkdir -p ./artifacts
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> ./artifacts/result_run-notebooks-8-cpp-$(basename ${{ matrix.notebook }}).txt
+          cat ./artifacts/result_run-notebooks-8-cpp-$(basename ${{ matrix.notebook }}).txt
+          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: result_run-notebooks-8-cpp-${{ env.sanitized_name }}.txt
+          path: ./artifacts
+
 
   run-notebooks-8-python:
     needs: find-notebooks
@@ -162,6 +177,21 @@ jobs:
         run: |
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
+
+      - name: Output result
+        if: always()
+        run: |
+          mkdir -p ./artifacts
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> ./artifacts/result_run-notebooks-8-python-$(basename ${{ matrix.notebook }}).txt
+          cat ./artifacts/result_run-notebooks-8-python-$(basename ${{ matrix.notebook }}).txt
+          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: result_run-notebooks-8-python-${{ env.sanitized_name }}.txt
+          path: ./artifacts
 
   run-notebooks-13-cpp:
     needs: find-notebooks
@@ -244,6 +274,21 @@ jobs:
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
 
+      - name: Output result
+        if: always()
+        run: |
+          mkdir -p ./artifacts
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> ./artifacts/result_run-notebooks-13-python-$(basename ${{ matrix.notebook }}).txt
+          cat ./artifacts/result_run-notebooks-13-python-$(basename ${{ matrix.notebook }}).txt
+          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: result_run-notebooks-13-python-${{ env.sanitized_name }}.txt
+          path: ./artifacts
+
   run-notebooks-13-uproot:
     needs: find-notebooks
     runs-on: ubuntu-22.04
@@ -276,6 +321,21 @@ jobs:
         run: |
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
+
+      - name: Output result
+        if: always()
+        run: |
+          mkdir -p ./artifacts
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> ./artifacts/result_run-notebooks-13-uproot-$(basename ${{ matrix.notebook }}).txt
+          cat ./artifacts/result_run-notebooks-13-uproot-$(basename ${{ matrix.notebook }}).txt
+          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: result_run-notebooks-13-uproot-${{ env.sanitized_name }}.txt
+          path: ./artifacts
 
   run-notebooks-13-rdataframe:
     needs: find-notebooks
@@ -310,6 +370,21 @@ jobs:
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
 
+      - name: Output result
+        if: always()
+        run: |
+          mkdir -p ./artifacts
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> ./artifacts/result_run-notebooks-13-rdataframe-$(basename ${{ matrix.notebook }}).txt
+          cat ./artifacts/result_run-notebooks-13-rdataframe-$(basename ${{ matrix.notebook }}).txt
+          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: result_run-notebooks-13-rdataframe-${{ env.sanitized_name }}.txt
+          path: ./artifacts
+
   run-notebooks-research:
     needs: find-notebooks
     runs-on: ubuntu-22.04
@@ -342,6 +417,21 @@ jobs:
         run: |
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
+
+      - name: Output result
+        if: always()
+        run: |
+          mkdir -p ./artifacts
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> ./artifacts/result_run-notebooks-research-$(basename ${{ matrix.notebook }}).txt
+          cat ./artifacts/result_run-notebooks-research-$(basename ${{ matrix.notebook }}).txt
+          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: result_run-notebooks-research-${{ env.sanitized_name }}.txt
+          path: ./artifacts
 
 
 
@@ -404,10 +494,10 @@ jobs:
       - name: Commit and push to GitLab
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
-          GITLAB_USER: ${{ vars.GITLAB_USER }}
+          GITLAB_USER: ${{ secrets.GITLAB_USER }}
         run: |
-          git config --global user.name "atlasout"
-          git config --global user.email "atlasout@cern.ch"
+          git config --global user.name "${GITLAB_USER}"
+          git config --global user.email "${GITLAB_USER}@cern.ch"
           
           git clone https://oauth2:${GITLAB_TOKEN}@gitlab.cern.ch/atlas-outreach-data-tools/atlas-open-data-website-v2.git
           git remote set-url origin https://oauth2:${GITLAB_TOKEN}@gitlab.cern.ch/atlas-outreach-data-tools/atlas-open-data-website-v2.git
