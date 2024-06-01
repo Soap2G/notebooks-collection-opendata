@@ -351,6 +351,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Create downloaded-artifacts directory
+        run: mkdir -p ./artifacts
+
+
+      - name: Download all artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: '*'
+          path: ./artifacts
       
       - name: Generate status report
         run: |
@@ -369,18 +379,18 @@ jobs:
 
           for file in "${JOB_FILES[@]}"
           do
-            if [ -f "$GITHUB_WORKSPACE/$file" ]; then
+            if [ -f "$GITHUB_WORKSPACE/artifacts/$file" ]; then
               while IFS= read -r line
               do
-                NOTEBOOK=$(echo $line | cut -d: -f1)
-                STATUS=$(echo $line | cut -d: -f2 | xargs)
+                NOTEBOOK=$(echo "$line" | cut -d: -f1)
+                STATUS=$(echo "$line" | cut -d: -f2 | xargs)
                 if [ "$STATUS" == "success" ]; then
                   STATUS="✅"
                 else
                   STATUS="❌"
                 fi
                 echo "- $NOTEBOOK: $STATUS" >> status.md
-              done < "$GITHUB_WORKSPACE/$file"
+              done < "$GITHUB_WORKSPACE/artifacts/$file"
             fi
           done
 
