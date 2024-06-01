@@ -382,7 +382,7 @@ jobs:
           pwd
           for file in $(pwd)/artifacts/*
             do
-              ls $file
+              file $file
               if [ -f "$file" ]; then
                 while IFS= read -r line
                 do
