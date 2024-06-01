@@ -78,14 +78,14 @@ jobs:
           fi
           echo "notebooks13-python=$NOTEBOOKS13_python" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS13_rdataframe=$(find ./13-TeV-examples/rdataframe -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS13_rdataframe=$(find ./13-TeV-examples/rdataframe -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS13_rdataframe" ]; then
             echo "No notebooks found"
             NOTEBOOKS13_rdataframe="[]"
           fi
           echo "notebooks13-rdataframe=$NOTEBOOKS13_rdataframe" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS_research=$(find ./for-research -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS_research=$(find ./for-research -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS_research" ]; then
             echo "No notebooks found"
             NOTEBOOKS_research="[]"
@@ -199,10 +199,10 @@ jobs:
       - name: Output result
         if: always()
         run: |
-          echo "${{ matrix.notebook }}: ${{ job.status }}" >> result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
-          cat result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
-          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
           mkdir -p $GITHUB_WORKSPACE/artifacts
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> $GITHUB_WORKSPACE/artifacts/result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
+          cat $GITHUB_WORKSPACE/artifacts/result_run-notebooks-13-cpp-$(basename ${{ matrix.notebook }}).txt
+          echo "sanitized_name=$(basename ${{ matrix.notebook }})" >> $GITHUB_ENV
 
       - name: Upload results
         if: always()
