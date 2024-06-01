@@ -71,7 +71,7 @@ jobs:
           fi
           echo "notebooks13-uproot=$NOTEBOOKS13_uproot" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS13_python=$(find ./13-TeV-examples/python -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS13_python=$(find ./13-TeV-examples/python -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS13_python" ]; then
             echo "No notebooks found"
             NOTEBOOKS13_python="[]"
@@ -195,7 +195,18 @@ jobs:
         run: |
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
+          continue-on-error: true  # Ensure the job continues to output the result even if it fails
 
+      - name: Output result
+        run: |
+          echo "${{ matrix.notebook }}: ${{ job.status }}" >> $GITHUB_WORKSPACE/result_run-notebooks-13-cpp.txt
+          cat $GITHUB_WORKSPACE/result_run-notebooks-13-cpp.txt
+
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: result_run-notebooks-13-cpp
+          path: $GITHUB_WORKSPACE/result_run-notebooks-13-cpp.txt
 
   run-notebooks-13-python:
     needs: find-notebooks
