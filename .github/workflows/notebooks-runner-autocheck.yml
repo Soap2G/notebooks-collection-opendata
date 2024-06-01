@@ -195,7 +195,7 @@ jobs:
         run: |
           cd $(dirname ${{ matrix.notebook }})
           papermill $(basename ${{ matrix.notebook }}) /dev/null
-          continue-on-error: true  # Ensure the job continues to output the result even if it fails
+        continue-on-error: true  # Ensure the job continues to output the result even if it fails
 
       - name: Output result
         run: |
