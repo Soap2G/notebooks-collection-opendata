@@ -410,6 +410,7 @@ jobs:
           git config --global user.email "atlasout@cern.ch"
           
           git clone https://oauth2:${GITLAB_TOKEN}@gitlab.cern.ch/atlas-outreach-data-tools/atlas-open-data-website-v2.git
+          git remote set-url origin https://oauth2:${GITLAB_TOKEN}@gitlab.cern.ch/atlas-outreach-data-tools/atlas-open-data-website-v2.git
           cd atlas-open-data-website-v2/docs
           
           mv ../../status.md status.md
