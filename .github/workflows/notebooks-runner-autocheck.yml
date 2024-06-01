@@ -383,6 +383,7 @@ jobs:
           for file in $(pwd)/artifacts/*
             do
               file $file
+              ls $file/*
               if [ -f "$file" ]; then
                 while IFS= read -r line
                 do
