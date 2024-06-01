@@ -64,28 +64,28 @@ jobs:
           fi
           echo "notebooks13-cpp=$NOTEBOOKS13_cpp" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS13_uproot=$(find ./13-TeV-examples/uproot_python -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS13_uproot=$(find ./13-TeV-examples/uproot_python -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS13_uproot" ]; then
             echo "No notebooks found"
             NOTEBOOKS13_uproot="[]"
           fi
           echo "notebooks13-uproot=$NOTEBOOKS13_uproot" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS13_python=$(find ./13-TeV-examples/python -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS13_python=$(find ./13-TeV-examples/python -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS13_python" ]; then
             echo "No notebooks found"
             NOTEBOOKS13_python="[]"
           fi
           echo "notebooks13-python=$NOTEBOOKS13_python" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS13_rdataframe=$(find ./13-TeV-examples/rdataframe -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS13_rdataframe=$(find ./13-TeV-examples/rdataframe -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS13_rdataframe" ]; then
             echo "No notebooks found"
             NOTEBOOKS13_rdataframe="[]"
           fi
           echo "notebooks13-rdataframe=$NOTEBOOKS13_rdataframe" >> $GITHUB_OUTPUT
 
-          NOTEBOOKS_research=$(find ./for-research -name '*Z.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
+          NOTEBOOKS_research=$(find ./for-research -name '*.ipynb' -print0 | jq -Rsc 'split("\u0000")[:-1]')
           if [ -z "$NOTEBOOKS_research" ]; then
             echo "No notebooks found"
             NOTEBOOKS_research="[]"
