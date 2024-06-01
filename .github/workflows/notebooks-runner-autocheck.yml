@@ -404,18 +404,17 @@ jobs:
       - name: Commit and push to GitLab
         env:
           GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GITLAB_USER: ${{ vars.GITLAB_USER }}
         run: |
-          git config --global user.name "${{ vars.GITLAB_USER }}"
-          git config --global user.email "${{ vars.GITLAB_USER }}@cern.ch"
+          git config --global user.name "${GITLAB_USER}"
+          git config --global user.email "${GITLAB_USER}@cern.ch"
           
-          git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.cern.ch/atlas-outreach-data-tools/atlas-open-data-website-v2.git
+          git clone https://oauth2:${GITLAB_TOKEN}@gitlab.cern.ch/atlas-outreach-data-tools/atlas-open-data-website-v2.git
           cd atlas-open-data-website-v2/docs
-          ls -l
           
-          mkdir -p docs
           mv ../../status.md status.md
 
-          ls -l
+          ls -l status.md
 
           git checkout -b update_status_${{ github.sha }}
           git add status.md
