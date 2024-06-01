@@ -208,7 +208,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: result_run-notebooks-13-cpp-${{ env.sanitized_name }}
+          name: result_run-notebooks-13-cpp-${{ env.sanitized_name }}.txt
           path: ./artifacts
 
   run-notebooks-13-python:
@@ -354,13 +354,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create downloaded-artifacts directory
-        run: mkdir -p $GITHUB_WORKSPACE/artifacts
+        run: mkdir -p ./artifacts
 
 
       - name: Download all artifacts
         uses: actions/download-artifact@v3
         with:
-          path: $GITHUB_WORKSPACE/artifacts
+          path: ./artifacts
       
       - name: Generate status report
         run: |
@@ -377,9 +377,9 @@ jobs:
             "result_run-notebooks-research.txt"
           )
 
-          for file in "${JOB_FILES[@]}"
+          for file in ./artifacts/*
           do
-            if [ -f "$GITHUB_WORKSPACE/artifacts/$file" ]; then
+            if [ -f "$file" ]; then
               while IFS= read -r line
               do
                 NOTEBOOK=$(echo "$line" | cut -d: -f1)
